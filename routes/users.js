@@ -16,12 +16,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res, next) => {
-  // Create a new document from the JSON in the request body
+
+  // console.log(req.body);
+  
   const newUser = new User(req.body);
-  // Save that document
+
   newUser.save()
     .then(savedUser => {
-      // Send the saved document in the response
+
       res.send(savedUser);
     })
     .catch(err => {
