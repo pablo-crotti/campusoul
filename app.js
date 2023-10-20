@@ -1,8 +1,12 @@
 import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
+import mongoose from 'mongoose';
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+
+mongoose.connect('mongodb://127.0.0.1/campusoul', { useNewUrlParser: true, useUnifiedTopology: true });
+
 const app = express();
 
 app.use(logger("dev"));
