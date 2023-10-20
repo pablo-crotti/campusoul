@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const interestSchema = new mongoose.Schema({
+const interestSchema = new Schema({
     title: String,
     icon: String
 });
