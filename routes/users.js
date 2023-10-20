@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', (req, res, next) => {
 
-  // console.log(req.body);
+  console.log(req.body);
   
   const newUser = new User(req.body);
 
