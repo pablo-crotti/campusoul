@@ -9,9 +9,13 @@ const userSchema = new Schema({
     token: String,
     birthdate: Date,
     bio: String,
-    location: String,
+    location: {
+        type: { type: String },
+        coordinates: [Number]
+    },
     last_activity: Date,
     created_at: Date
 });
 
+userSchema.index({ location: '2dsphere' });
 export default mongoose.model('User', userSchema);
