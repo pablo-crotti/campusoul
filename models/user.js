@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-// Define the schema for users
+
 const userSchema = new Schema({
     name: String,
     email: String,
@@ -23,5 +23,4 @@ const userSchema = new Schema({
     last_activity: Date,
     created_at: Date
 });
-// Create the model from the schema and export it
 export default mongoose.model('User', userSchema);
