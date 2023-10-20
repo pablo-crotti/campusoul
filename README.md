@@ -8,4 +8,4 @@ CampuSoul is an application that reinvents dating for Swiss students. By combini
 - Meuwly Nicolas
 ## Database
 ![Our database](/imgs_readme/DBCampuSoul.png)
-To better access the database, please refer to this <a href="https://dbdiagram.io/d/653249f4ffbf5169f018783c" target="_blank">link</a>
+To better access the database, please refer to this [link](https://dbdiagram.io/d/653249f4ffbf5169f018783c)
