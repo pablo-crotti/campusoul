@@ -7,4 +7,4 @@ const imgUserSchema = new mongoose.Schema({
     position: Number
   });
 
-export default mongoose.model('imgUser', imgUserSchema);
+export default mongoose.model('ImgUser', imgUserSchema);
