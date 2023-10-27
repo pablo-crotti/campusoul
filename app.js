@@ -2,6 +2,7 @@ import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
+import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import mongoose from 'mongoose';
 import 'dotenv/config'
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
+app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
