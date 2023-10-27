@@ -1,26 +1,38 @@
 import mongoose from 'mongoose';
+import bcrypt from "bcrypt";
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    name: String,
-    email: String,
-    password: String,
-    salt: String,
-    token: String,
-    birthdate: Date,
-    bio: String,
-    location: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type: [Number],
-            required: true
-        }
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        unique: true
     },
-    last_activity: Date,
-    created_at: Date
+    password: {
+        type: String,
+        required: true
+    }
 });
+
+userSchema.pre('save', async function (next) {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(this.password, salt);
+        this.password = hashedPassword;
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+userSchema.methods.isValidPassword = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.password);
+    } catch (err) {
+        throw err;
+    }
+}
+
 export default mongoose.model('User', userSchema);

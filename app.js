@@ -1,11 +1,33 @@
 import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
-import mongoose from 'mongoose';
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+import mongoose from 'mongoose';
+import 'dotenv/config'
 
-mongoose.connect('mongodb://127.0.0.1/campusoul', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI, { dbName: process.env.DB_NAME })
+  .then(() => {
+    console.log('MongoDB connected...')
+  })
+  .catch((err) => console.log(err))
+
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to db...');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log(err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose connection is disconnected...');
+});
+
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  process.exit(0);
+});
 
 const app = express();
 
