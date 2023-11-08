@@ -4,6 +4,7 @@ import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import interestsRouter from "./routes/interests.js";
+import matchsRouter from "./routes/matchs.js";
 import db from './config/db.js';
 
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/interests", interestsRouter);
+app.use("/matchs", matchsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

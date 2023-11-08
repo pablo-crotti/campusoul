@@ -4,19 +4,15 @@ student-dating-app/
 |   |-- config/
 |   |-- controllers/
 |   |   |-- imageController.js
-|   |   |-- interestController.js
 |   |   |-- matchController.js
 |   |   |-- messageController.js
 |   |-- middleware/
 |   |   |-- errorHandler.js
 |   |-- models/
-|   |   |-- imageModel.js
-|   |   |-- userInterestModel.js
 |   |   |-- matchModel.js
 |   |   |-- messageModel.js
 |   |-- routes/
 |   |   |-- imageRoutes.js
-|   |   |-- interestRoutes.js
 |   |   |-- matchRoutes.js
 |   |   |-- messageRoutes.js
 |   |-- app.js
