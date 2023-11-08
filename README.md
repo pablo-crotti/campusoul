@@ -1,4 +1,3 @@
-# campusoul-2
 # CampuSoul
 ## Description
 CampuSoul is an application that reinvents dating for Swiss students. By combining the Tinder model with shared academic interests, we create a unique dating experience centered around higher education.
