@@ -16,10 +16,10 @@ router.post('/login', userValidation.login, authController.login);
 router.get('/:userId', auth, userController.getProfile);
 router.put('/:userId', auth, authUser, userController.updateProfile);
 
-router.post('/:userId/interests', userController.addInterestToUser);
+router.post('/:userId/interests', auth, authUser, userController.addInterestToUser);
 
-router.delete('/:userId/interests/:interestId', userController.removeInterestFromUser);
-router.get('/:userId/interests', userController.getUserInterests);
+router.delete('/:userId/interests/:interestId', auth, authUser, userController.removeInterestFromUser);
+router.get('/:userId/interests', auth, userController.getUserInterests);
 
 
 
