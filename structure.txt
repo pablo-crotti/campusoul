@@ -1,0 +1,35 @@
+student-dating-app/
+|-- node_modules/
+|-- src/
+|   |-- config/
+|   |-- controllers/
+|   |   |-- imageController.js
+|   |   |-- interestController.js
+|   |   |-- matchController.js
+|   |   |-- messageController.js
+|   |-- middleware/
+|   |   |-- errorHandler.js
+|   |-- models/
+|   |   |-- imageModel.js
+|   |   |-- interestModel.js
+|   |   |-- userInterestModel.js
+|   |   |-- matchModel.js
+|   |   |-- messageModel.js
+|   |-- routes/
+|   |   |-- imageRoutes.js
+|   |   |-- interestRoutes.js
+|   |   |-- matchRoutes.js
+|   |   |-- messageRoutes.js
+|   |-- app.js
+|-- test/
+|   |-- auth.test.js
+|   |-- user.test.js
+|   |-- image.test.js
+|   |-- interest.test.js
+|   |-- match.test.js
+|   |-- message.test.js
+|-- .env
+|-- .gitignore
+|-- package.json
+|-- package-lock.json
+|-- README.md

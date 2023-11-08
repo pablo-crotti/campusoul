@@ -3,9 +3,7 @@ import createError from "http-errors";
 import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
-
-import mongoose from 'mongoose';
-mongoose.connect('mongodb://127.0.0.1/campusoul');
+import db from './config/db.js';
 
 const app = express();
 
