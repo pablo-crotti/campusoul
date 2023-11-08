@@ -14,11 +14,11 @@ router.post('/login', userValidation.login, authController.login);
 
 // Routes de profil d'utilisateur
 router.get('/:userId', auth, userController.getProfile);
-router.put('/:userId', auth, authUser, userController.updateProfile);
+router.put('/:userId', auth, userController.updateProfile);
 
-router.post('/:userId/interests', auth, authUser, userController.addInterestToUser);
+router.post('/interests', auth, userController.addInterestToUser);
 
-router.delete('/:userId/interests/:interestId', auth, authUser, userController.removeInterestFromUser);
+router.delete('/interests/:interestId', auth, userController.removeInterestFromUser);
 router.get('/:userId/interests', auth, userController.getUserInterests);
 
 
