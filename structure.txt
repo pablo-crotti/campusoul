@@ -4,16 +4,14 @@ student-dating-app/
 |   |-- config/
 |   |-- controllers/
 |   |   |-- imageController.js
-|   |   |-- matchController.js
 |   |   |-- messageController.js
 |   |-- middleware/
 |   |   |-- errorHandler.js
 |   |-- models/
-|   |   |-- matchModel.js
+|   |   |-- imgModel.js
 |   |   |-- messageModel.js
 |   |-- routes/
 |   |   |-- imageRoutes.js
-|   |   |-- matchRoutes.js
 |   |   |-- messageRoutes.js
 |   |-- app.js
 |-- test/
