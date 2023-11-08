@@ -75,6 +75,23 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+userSchema.methods.addInterest = async function (interestId) {
+  if (this.interests.includes(interestId)) {
+    throw new Error('Interest already added.');
+  }
+  if (this.interests.length >= 5) {
+    throw new Error('You can only add up to 5 interests.');
+  }
+  this.interests.push(interestId);
+  await this.save();
+};
+
+// Méthode pour supprimer un intérêt de l'utilisateur
+userSchema.methods.removeInterest = async function (interestId) {
+  this.interests = this.interests.filter(id => id.toString() !== interestId.toString());
+  await this.save();
+};
+
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);
 
