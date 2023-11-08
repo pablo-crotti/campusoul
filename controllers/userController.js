@@ -26,7 +26,7 @@ const userController = {
     try {
       const userId = req.user._id; // Supposons que req.user est le user authentifié
       // const { interestId } = req.body;
-      const interestId = req.params.interestId;
+      const { interestId } = req.body;
 
       const user = await User.findById(userId);
       if (!user) {
@@ -43,7 +43,7 @@ const userController = {
   async removeInterestFromUser(req, res) {
     try {
       const userId = req.user._id; // Supposons que req.user est le user authentifié
-      const { interestId } = req.body;
+      const interestId = req.params.interestId;
 
       const user = await User.findById(userId);
       if (!user) {
