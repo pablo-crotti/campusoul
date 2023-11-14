@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import ENV from './env.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const { mongoURI } = ENV;
-const { mongoDBName } = ENV;
 
-mongoose.connect(mongoURI, {dbName: mongoDBName}, {
+mongoose.connect(process.env.MONGODB_URI, {dbName: process.env.MONGODB_NAME}, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
