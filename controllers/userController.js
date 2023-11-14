@@ -67,6 +67,24 @@ const userController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  },
+  async setUserLocation(req, res) {
+    try {
+      const userId = req.user._id;
+      const { type, coordinates } = req.body;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      user.location = {
+        type,
+        coordinates
+      };
+      await user.save();
+      res.json(user.location);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 

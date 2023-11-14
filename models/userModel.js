@@ -30,8 +30,17 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
   location: {
-    type: String,
-    trim: true
+    type: {
+      type: String,
+      enum: [ 'Point' ]
+    },
+    coordinates: {
+      type: [ Number ],
+      validate: {
+        validator: validateGeoJsonCoordinates,
+        message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array'
+      }
+    }
   },
   lastActivity: {
     type: Date,
@@ -91,6 +100,22 @@ userSchema.methods.removeInterest = async function (interestId) {
   this.interests = this.interests.filter(id => id.toString() !== interestId.toString());
   await this.save();
 };
+
+// Créer un index géospatial sur le champ location
+userSchema.index({ location: '2dsphere' });
+
+// Validation d'un tableau de coordonnées GeoJSON (longitude, latitude et altitude facultative).
+function validateGeoJsonCoordinates(value) {
+  return Array.isArray(value) && value.length >= 2 && value.length <= 3 && isLongitude(value[0]) && isLatitude(value[1]);
+}
+
+function isLatitude(value) {
+  return value >= -90 && value <= 90;
+}
+
+function isLongitude(value) {
+  return value >= -180 && value <= 180;
+}
 
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);
