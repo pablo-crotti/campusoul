@@ -52,12 +52,10 @@ router.post('/upload', auth, upload.single('file'), async (req, res) => {
             const userId = req.user._id;
 
             image.save().then((savedImage) => {
-                User.findByIdAndUpdate(userId, { $push: { images: savedImage._id } }, { new: true })
-                    .then(updatedUser => {
-                        res.status(201).json(updatedUser); 
-                    }).catch((error) => {
-                        res.status(400).json({ message: error.message });
-                    })
+              return User.findByIdAndUpdate(userId, { $push: { images: savedImage._id } }, { new: true })
+
+            }).then(updatedUser => {
+                res.status(201).json(updatedUser); 
             }).catch((error) => {
                 res.status(400).json({ message: error.message });
             })
