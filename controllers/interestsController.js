@@ -1,4 +1,3 @@
-// controllers/interestController.js
 import Interest from '../models/interestModel.js';
 
 const interestController = {

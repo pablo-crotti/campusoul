@@ -8,12 +8,12 @@ const authController = {
         return res.status(400).json({ message: 'Email already exists' });
       }
       user = new User(req.body);
-      const token = await user.generateAuthToken(); // Générer un token pour l'utilisateur
+      const token = await user.generateAuthToken(); 
       await user.save();
 
-      user.password = undefined; // Ne pas inclure le mot de passe dans la réponse
+      user.password = undefined; 
 
-      res.status(201).json({ user, token }); // Inclure le token dans la réponse
+      res.status(201).json({ user, token }); 
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -26,11 +26,11 @@ const authController = {
         return res.status(401).json({ message: 'Invalid email or password' });
       }
 
-      const token = await user.generateAuthToken(); // Générer un nouveau token
+      const token = await user.generateAuthToken(); 
 
-      user.password = undefined; // Ne pas inclure le mot de passe dans la réponse
+      user.password = undefined; 
 
-      res.status(200).json({ token, user }); // Inclure le token dans la réponse
+      res.status(200).json({ token, user }); 
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
