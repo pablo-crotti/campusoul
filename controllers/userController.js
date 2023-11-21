@@ -24,7 +24,7 @@ const userController = {
 
   async addInterestToUser(req, res) {
     try {
-      const userId = req.user._id; 
+      const userId = req.user._id;
       const { interestId } = req.body;
 
       const user = await User.findById(userId);
@@ -41,7 +41,7 @@ const userController = {
 
   async removeInterestFromUser(req, res) {
     try {
-      const userId = req.user._id; 
+      const userId = req.user._id;
       const interestId = req.params.interestId;
 
       const user = await User.findById(userId);
@@ -87,23 +87,32 @@ const userController = {
   },
   async getAllUsers(req, res) {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 5;
-        const skip = (page - 1) * limit;
+      const page = parseInt(req.query.page) || 1;
+      const limit = 5;
+      const skip = (page - 1) * limit;
 
-        const users = await User.find().skip(skip).limit(limit);
-        const total = await User.countDocuments();
+      const users = await User.find().skip(skip).limit(limit);
+      const total = await User.countDocuments();
 
-        res.status(200).json({
-            total,
-            page,
-            totalPages: Math.ceil(total / limit),
-            users
-        });
+      res.status(200).json({
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+        users
+      });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-}
+  },
+  async deleteProfile(req, res) {
+    try {
+      const userId = req.params.userId;
+      await User.findByIdAndDelete(userId);
+      res.status(200).json({ message: 'User deleted' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 
 };
 
