@@ -6,19 +6,24 @@ import usersRouter from "./routes/users.js";
 import interestsRouter from "./routes/interests.js";
 import matchsRouter from "./routes/matchs.js";
 import messagesRouter from "./routes/messages.js";
+import imagesRouter from "./routes/images.js";
 import db from './config/db.js';
+import formData from "express-form-data";
+import bodyParser from "body-parser";
 
 const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+// app.use(bodyParser());
+// app.use(formData.parse());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/interests", interestsRouter);
 app.use("/matchs", matchsRouter);
 app.use("/messages", messagesRouter);
+app.use("/images", imagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
