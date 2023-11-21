@@ -6,6 +6,7 @@ const router = express.Router();
 
 
 router.post('/', authAdmin, interestController.createInterest);
+router.patch('/:id', authAdmin, interestController.updateInterest);
 router.delete('/:id', authAdmin, interestController.deleteInterest);
 router.get('/', auth, interestController.getAllInterests);
 router.get('/:id', auth, interestController.getInterest);

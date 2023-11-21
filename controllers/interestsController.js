@@ -45,6 +45,15 @@ const interestController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  },
+
+  async updateInterest(req, res) {
+    try {
+      const interest = await Interest.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.status(200).json({ interest });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
