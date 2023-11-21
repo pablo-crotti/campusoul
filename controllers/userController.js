@@ -24,8 +24,7 @@ const userController = {
 
   async addInterestToUser(req, res) {
     try {
-      const userId = req.user._id; // Supposons que req.user est le user authentifié
-      // const { interestId } = req.body;
+      const userId = req.user._id; 
       const { interestId } = req.body;
 
       const user = await User.findById(userId);
@@ -42,7 +41,7 @@ const userController = {
 
   async removeInterestFromUser(req, res) {
     try {
-      const userId = req.user._id; // Supposons que req.user est le user authentifié
+      const userId = req.user._id; 
       const interestId = req.params.interestId;
 
       const user = await User.findById(userId);
@@ -85,7 +84,27 @@ const userController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
+  async getAllUsers(req, res) {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
+
+        const users = await User.find().skip(skip).limit(limit);
+        const total = await User.countDocuments();
+
+        res.status(200).json({
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+            users
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 };
 
 export default userController;
