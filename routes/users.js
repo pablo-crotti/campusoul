@@ -10,8 +10,6 @@ const router = express.Router();
 router.post('/register', userValidation.register, authController.register);
 router.post('/login', userValidation.login, authController.login);
 
-
-
 // Routes de profil d'utilisateur
 router.get('/:userId', auth, userController.getProfile);
 router.patch('/:userId', auth, userController.updateProfile);

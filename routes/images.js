@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.post('/upload', auth, upload.single('file'), async (req, res) => {
+router.post('', auth, upload.single('file'), async (req, res) => {
     try {
 
         if (!req.file) {
@@ -52,15 +52,65 @@ router.post('/upload', auth, upload.single('file'), async (req, res) => {
             const userId = req.user._id;
 
             image.save().then((savedImage) => {
-              return User.findByIdAndUpdate(userId, { $push: { images: savedImage._id } }, { new: true })
+                return User.findByIdAndUpdate(userId, { $push: { images: savedImage._id } }, { new: true })
 
             }).then(updatedUser => {
-                res.status(201).json(updatedUser); 
+                updatedUser.password = undefined;
+                res.status(201).json(updatedUser);
             }).catch((error) => {
                 res.status(400).json({ message: error.message });
             })
 
         });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.delete('/:imageId', auth, async (req, res) => {
+    try {
+        const imageId = req.params.imageId;
+        const userId = req.user._id;
+
+        const image = await Image.findById(imageId);
+        if (!image) {
+            return res.status(404).send('Image not found.');
+        }
+
+        const filename = image.url.split('/').pop();
+
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: filename
+        };
+
+        s3.deleteObject(params, async (err, data) => {
+            if (err) {
+                console.error('Error deleting from S3:', err);
+                return res.status(500).send('Error deleting from S3');
+            }
+
+            await Image.findByIdAndDelete(imageId);
+
+            await User.findByIdAndUpdate(userId, { $pull: { images: imageId } });
+
+            res.status(200).send('Image successfully deleted');
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/:imageId', async (req, res) => {
+    try {
+        const imageId = req.params.imageId;
+
+        const image = await Image.findById(imageId);
+        if (!image) {
+            return res.status(404).send('Image not found.');
+        }
+
+        res.status(200).json(image);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

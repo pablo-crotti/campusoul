@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  title: Campusoul
+  version: 1.0.0
+paths:
+  /users/register:
+    post:
+      summary: Inscription d'un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Utilisateur enregistré
+        400:
+          description: Email déjà existant
+        500:
+          description: Erreur serveur
+  /users/login:
+    post:
+      summary: Connexion d'un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Connexion réussie
+        401:
+          description: Email ou mot de passe invalide
+        500:
+          description: Erreur serveur
+  /interests:
+    post:
+      summary: Créer un intérêt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        201:
+          description: Intérêt créé
+        500:
+          description: Erreur serveur
+  /interests/{id}:
+    delete:
+      summary: Supprimer un intérêt
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Intérêt supprimé
+        404:
+          description: Intérêt non trouvé
+        500:
+          description: Erreur serveur
+  /images:
+    post:
+      summary: Télécharge une image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Image téléchargée avec succès
+        400:
+          description: Aucun fichier téléchargé
+        500:
+          description: Erreur serveur
+  /images/{imageId}:
+    delete:
+      summary: Supprime une image
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Image supprimée avec succès
+        404:
+          description: Image non trouvée
+        500:
+          description: Erreur serveur
+    get:
+      summary: Récupère une image spécifique
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Image récupérée avec succès
+        404:
+          description: Image non trouvée
+        500:
+          description: Erreur serveur   
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        token:
+          type: string
+        name:
+          type: string
+        birthdate:
+          type: string
+          format: date
+        bio:
+          type: string
+        location:
+          type: object
+          properties:
+            type:
+              type: string
+            coordinates:
+              type: array
+              items:
+                type: number
+        lastActivity:
+          type: string
+          format: date-time
+        interests:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+    Interest:
+      type: object
+      properties:
+        name:
+          type: string
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+
+
