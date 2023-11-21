@@ -69,7 +69,7 @@ const userController = {
   },
   async setUserLocation(req, res) {
     try {
-      const userId = req.user._id;
+      const userId = req.params.userId;
       const { type, coordinates } = req.body;
       const user = await User.findById(userId);
       if (!user) {

@@ -21,7 +21,7 @@ router.post('/interests', auth, userController.addInterestToUser);
 router.delete('/interests/:interestId', auth, userController.removeInterestFromUser);
 router.get('/:userId/interests', auth, userController.getUserInterests);
 
-router.post('/location', auth, userController.setUserLocation);
+router.post('/location/:userId', auth, userMatch, userController.setUserLocation);
 
 
 
