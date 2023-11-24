@@ -34,7 +34,7 @@ To use the Campusoul API, follow these steps:
    - The available routes are defined in files under the `routes/` directory.
 
 ## API Documentation
-Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints.
+Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](http://localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints.
 
 ## Tests
 Unit and integration tests are available in the `spec/` directory. You can run them with `npm test` to ensure the quality and reliability of the API.
