@@ -4,7 +4,7 @@ info:
   description: API for a Campusoul application including user management, interest management, image handling, matches, and messaging.
   version: "1.0.0"
 servers:
-  - url: http://localhost:3000/
+  - url: http://localhost:3000//
 tags:
   - name: Authentication
     description: Authentication
@@ -30,14 +30,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
         "201":
           description: Successfully registered
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/User"
         "400":
           description: Email already exists
 
@@ -72,6 +77,8 @@ paths:
     get:
       tags: [Users]
       summary: Get user profile
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
       responses:
