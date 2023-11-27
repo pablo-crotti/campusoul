@@ -1,11 +1,30 @@
 openapi: 3.0.0
 info:
-  title: Campusoul
-  version: 1.0.0
+  title: Campusoul API
+  description: API for a Campusoul application including user management, interest management, image handling, matches, and messaging.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000//
+tags:
+  - name: Authentication
+    description: Authentication
+  - name: Users
+    description: User management
+  - name: Interests
+    description: Interest management
+  - name: Images
+    description: Image management
+  - name: Matches
+    description: Match management
+  - name: Messages
+    description: Messaging
+
 paths:
-  /users/register:
+  # User Registration
+  users/register:
     post:
-      summary: Inscription d'un utilisateur
+      tags: [Authentication]
+      summary: Register a new user
       requestBody:
         required: true
         content:
@@ -18,15 +37,20 @@ paths:
                 password:
                   type: string
       responses:
-        201:
-          description: Utilisateur enregistré
-        400:
-          description: Email déjà existant
-        500:
-          description: Erreur serveur
-  /users/login:
+        "201":
+          description: Successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Email already exists
+
+  # User Login
+  users/login:
     post:
-      summary: Connexion d'un utilisateur
+      tags: [Authentication]
+      summary: Log in a user
       requestBody:
         required: true
         content:
@@ -39,15 +63,149 @@ paths:
                 password:
                   type: string
       responses:
-        200:
-          description: Connexion réussie
-        401:
-          description: Email ou mot de passe invalide
-        500:
-          description: Erreur serveur
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid email or password
+
+  # Get User Profile
+  users/{userId}:
+    get:
+      tags: [Users]
+      summary: Get user profile
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+    patch:
+      tags: [Users]
+      summary: Update user profile
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: User profile updated
+        "404":
+          description: User not found
+
+    # Delete User Profile
+    delete:
+      tags: [Users]
+      summary: Delete user profile
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: User deleted
+        "404":
+          description: User not found
+
+  # Add Interest to User
+  users/interests:
+    post:
+      tags: [Users]
+      summary: Add an interest to a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                interestId:
+                  type: string
+      responses:
+        "200":
+          description: Interest added
+        "404":
+          description: User not found
+        "500":
+          description: Server error
+
+  # Get User Interests
+  users/{userId}/interests:
+    get:
+      tags: [Users]
+      summary: Get user interests
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: List of user interests
+        "404":
+          description: User not found
+
+  # Remove Interest from User
+  users/{userId}/interests/{interestId}:
+    delete:
+      tags: [Users]
+      summary: Remove an interest from a user
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - name: interestId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Interest removed
+        "404":
+          description: User not found
+
+  # Set User Location
+  users/location/{userId}:
+    post:
+      tags: [Users]
+      summary: Set user location
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: ["Point"]
+                coordinates:
+                  type: array
+                  items:
+                    type: number
+      responses:
+        "200":
+          description: Location updated
+        "404":
+          description: User not found
+
+  # Interest Management Routes
   /interests:
     post:
-      summary: Créer un intérêt
+      tags: [Interests]
+      summary: Create a new interest
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -58,29 +216,101 @@ paths:
                 name:
                   type: string
       responses:
-        201:
-          description: Intérêt créé
-        500:
-          description: Erreur serveur
-  /interests/{id}:
-    delete:
-      summary: Supprimer un intérêt
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
+        "201":
+          description: Interest created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Interest"
+        "500":
+          description: Server error
+
+    get:
+      tags: [Interests]
+      summary: Get all interests
+      security:
+        - BearerAuth: []
       responses:
-        200:
-          description: Intérêt supprimé
-        404:
-          description: Intérêt non trouvé
-        500:
-          description: Erreur serveur
+        "200":
+          description: List of interests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  interests:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Interest"
+        "500":
+          description: Server error
+
+  /interests/{id}:
+    get:
+      tags: [Interests]
+      summary: Get a specific interest
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/InterestId"
+      responses:
+        "200":
+          description: Interest data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Interest"
+        "404":
+          description: Interest not found
+        "500":
+          description: Server error
+
+    patch:
+      tags: [Interests]
+      summary: Update an interest
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/InterestId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: Interest updated
+        "404":
+          description: Interest not found
+        "500":
+          description: Server error
+
+    delete:
+      tags: [Interests]
+      summary: Delete an interest
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/InterestId"
+      responses:
+        "200":
+          description: Interest deleted
+        "404":
+          description: Interest not found
+        "500":
+          description: Server error
+
+  # Image Management Routes
   /images:
     post:
-      summary: Télécharge une image
+      tags: [Images]
+      summary: Upload an image
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -92,43 +322,159 @@ paths:
                   type: string
                   format: binary
       responses:
-        201:
-          description: Image téléchargée avec succès
-        400:
-          description: Aucun fichier téléchargé
-        500:
-          description: Erreur serveur
+        "201":
+          description: Image uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: No file uploaded
+        "500":
+          description: Server error or error uploading to S3
+
   /images/{imageId}:
-    delete:
-      summary: Supprime une image
-      parameters:
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Image supprimée avec succès
-        404:
-          description: Image non trouvée
-        500:
-          description: Erreur serveur
     get:
-      summary: Récupère une image spécifique
+      tags: [Images]
+      summary: Retrieve an image by ID
       parameters:
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/ImageId"
       responses:
-        200:
-          description: Image récupérée avec succès
-        404:
-          description: Image non trouvée
-        500:
-          description: Erreur serveur   
+        "200":
+          description: Image data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        "404":
+          description: Image not found
+        "500":
+          description: Server error
+
+    delete:
+      tags: [Images]
+      summary: Delete an image by ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ImageId"
+      responses:
+        "200":
+          description: Image deleted successfully
+        "404":
+          description: Image not found
+        "500":
+          description: Server error or error deleting from S3
+
+  # Match Management Routes
+  /matches/like:
+    post:
+      tags: [Matches]
+      summary: Like a user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                toUserId:
+                  type: string
+      responses:
+        "201":
+          description: Like or match created successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/LikeResponse"
+                  - $ref: "#/components/schemas/MatchResponse"
+        "500":
+          description: Server error
+
+  /matches/list:
+    get:
+      tags: [Matches]
+      summary: List all matches of the authenticated user
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Match"
+
+  /matches/unmatch/{matchId}:
+    post:
+      tags: [Matches]
+      summary: Unmatch a user
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/MatchId"
+      responses:
+        "200":
+          description: Match successfully unmade
+        "404":
+          description: Match not found
+        "401":
+          description: Unauthorized action
+        "500":
+          description: Server error
+
+  # Messaging Routes
+  /messages/send:
+    post:
+      tags: [Messages]
+      summary: Send a message
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                matchId:
+                  type: string
+                content:
+                  type: string
+      responses:
+        "201":
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "500":
+          description: Server error
+
+  /messages/{matchId}:
+    get:
+      tags: [Messages]
+      summary: Retrieve messages for a match
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/MatchId"
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+        "500":
+          description: Server error
 components:
   schemas:
     User:
@@ -138,43 +484,73 @@ components:
           type: string
         password:
           type: string
-        token:
-          type: string
         name:
+          type: string
+        bio:
           type: string
         birthdate:
           type: string
           format: date
-        bio:
-          type: string
+        interests:
+          type: array
+          items:
+            type: string
         location:
           type: object
           properties:
             type:
               type: string
+              enum: ["Point"]
             coordinates:
               type: array
               items:
                 type: number
-        lastActivity:
-          type: string
-          format: date-time
-        interests:
-          type: array
-          items:
-            type: string
         images:
           type: array
           items:
-            type: string
-        created_at:
+            $ref: "#/components/schemas/Image"
+        isAdmin:
+          type: boolean
+        createdAt:
           type: string
           format: date-time
+
     Interest:
       type: object
       properties:
         name:
           type: string
+
+    Match:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: string
+        matchedAt:
+          type: string
+          format: date-time
+        isMatchActive:
+          type: boolean
+
+    Message:
+      type: object
+      properties:
+        match:
+          type: string
+        sender:
+          type: string
+        receiver:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        read:
+          type: boolean
+
     Image:
       type: object
       properties:
@@ -183,3 +559,38 @@ components:
         createdAt:
           type: string
           format: date-time
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    InterestId:
+      name: interestId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    MatchId:
+      name: matchId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    ImageId:
+      name: imageId
+      in: path
+      required: true
+      schema:
+        type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
