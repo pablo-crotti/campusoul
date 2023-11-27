@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/send', auth, async (req, res) => {
     try {
         const message = await MessageController.sendMessage(req, res);
-        const targetUserIds = [req.user._id];
+        const targetUserIds = [req.user._id, message.receiver];
 
         broadcastMessage(message, targetUserIds);
     } catch (error) {
