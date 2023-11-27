@@ -1,7 +1,7 @@
 import express from 'express';
 import MessageController from '../controllers/messageController.js';
 import { auth } from '../middleware/authMiddleware.js';
-import { broadcastMessage } from '../ws.js';
+import { broadcastMessage } from '../config/ws.js';
 
 const router = express.Router();
 
