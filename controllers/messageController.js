@@ -24,7 +24,8 @@ const MessageController = {
       });
 
       await message.save();
-      res.status(201).json(message);
+      // res.status(201).json(message);
+      return message;
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
