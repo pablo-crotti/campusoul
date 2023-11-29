@@ -90,10 +90,6 @@ userSchema.methods.generateAuthToken = async function () {
   await user.save();
   return token;
 };
-// Méthode pour vérifier le mot de passe lors de la connexion
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
 
 userSchema.methods.addInterest = async function (interestId) {
   if (this.interests.includes(interestId)) {
@@ -127,6 +123,19 @@ function isLatitude(value) {
 function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
+
+userSchema.statics.findByAgeRange = async function (minAge, maxAge) {
+  const currentDate = new Date();
+  const minBirthdate = new Date(currentDate.getFullYear() - maxAge - 1, currentDate.getMonth(), currentDate.getDate());
+  const maxBirthdate = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
+
+  return this.find({
+    birthdate: {
+      $gte: minBirthdate,
+      $lte: maxBirthdate,
+    },
+  });
+};
 
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);

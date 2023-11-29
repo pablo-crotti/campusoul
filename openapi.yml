@@ -4,7 +4,7 @@ info:
   description: API for a Campusoul application including user management, interest management, image handling, matches, and messaging.
   version: "1.0.0"
 servers:
-  - url: http://localhost:3000//
+  - url: http://localhost:3000/
 tags:
   - name: Authentication
     description: Authentication
@@ -12,6 +12,8 @@ tags:
     description: User management
   - name: Interests
     description: Interest management
+  - name: Interest Admin
+    description: Interest management (Admin)
   - name: Images
     description: Image management
   - name: Matches
@@ -20,8 +22,7 @@ tags:
     description: Messaging
 
 paths:
-  # User Registration
-  users/register:
+  /users/register:
     post:
       tags: [Authentication]
       summary: Register a new user
@@ -46,8 +47,7 @@ paths:
         "400":
           description: Email already exists
 
-  # User Login
-  users/login:
+  /users/login:
     post:
       tags: [Authentication]
       summary: Log in a user
@@ -68,12 +68,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponse"
+                $ref: "#/components/schemas/User"
         "401":
           description: Invalid email or password
 
-  # Get User Profile
-  users/{userId}:
+  /users:
+    get:
+      tags: [Users]
+      summary: Get all users
+      security:
+        - BearerAuth: []
+      parameters:  
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Numéro de la page pour la pagination
+        - in: query
+          name: minAge
+          schema:
+            type: integer
+          description: Âge minimum des utilisateurs à récupérer
+        - in: query
+          name: maxAge
+          schema:
+            type: integer
+          description: Âge maximum des utilisateurs à récupérer
+      responses:
+        "200":
+          description: Données des profils utilisateurs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Utilisateur non trouvé
+
+  /users/{userId}:
     get:
       tags: [Users]
       summary: Get user profile
@@ -93,6 +125,8 @@ paths:
     patch:
       tags: [Users]
       summary: Update user profile
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
       requestBody:
@@ -100,17 +134,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserUpdate"
+              $ref: "#/components/schemas/User"
       responses:
         "200":
           description: User profile updated
         "404":
           description: User not found
 
-    # Delete User Profile
     delete:
       tags: [Users]
       summary: Delete user profile
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
       responses:
@@ -119,11 +154,12 @@ paths:
         "404":
           description: User not found
 
-  # Add Interest to User
-  users/interests:
+  /users/interests:
     post:
       tags: [Users]
       summary: Add an interest to a user
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -141,11 +177,12 @@ paths:
         "500":
           description: Server error
 
-  # Get User Interests
-  users/{userId}/interests:
+  /users/{userId}/interests:
     get:
       tags: [Users]
       summary: Get user interests
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
       responses:
@@ -154,11 +191,12 @@ paths:
         "404":
           description: User not found
 
-  # Remove Interest from User
-  users/{userId}/interests/{interestId}:
+  /users/{userId}/interests/{interestId}:
     delete:
       tags: [Users]
       summary: Remove an interest from a user
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
         - name: interestId
@@ -172,11 +210,12 @@ paths:
         "404":
           description: User not found
 
-  # Set User Location
-  users/location/{userId}:
+  /users/location/{userId}:
     post:
       tags: [Users]
       summary: Set user location
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/UserId"
       requestBody:
@@ -199,10 +238,9 @@ paths:
         "404":
           description: User not found
 
-  # Interest Management Routes
   /interests:
     post:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Create a new interest
       security:
         - BearerAuth: []
@@ -221,7 +259,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Interest"
+                $ref: "#/components/schemas/interest"
         "500":
           description: Server error
 
@@ -241,7 +279,7 @@ paths:
                   interests:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Interest"
+                      $ref: "#/components/schemas/interest"
         "500":
           description: Server error
 
@@ -259,14 +297,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Interest"
+                $ref: "#/components/schemas/interest"
         "404":
           description: Interest not found
         "500":
           description: Server error
 
     patch:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Update an interest
       security:
         - BearerAuth: []
@@ -290,7 +328,7 @@ paths:
           description: Server error
 
     delete:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Delete an interest
       security:
         - BearerAuth: []
@@ -304,7 +342,6 @@ paths:
         "500":
           description: Server error
 
-  # Image Management Routes
   /images:
     post:
       tags: [Images]
@@ -337,6 +374,8 @@ paths:
     get:
       tags: [Images]
       summary: Retrieve an image by ID
+      security:
+        - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/ImageId"
       responses:
@@ -366,7 +405,6 @@ paths:
         "500":
           description: Server error or error deleting from S3
 
-  # Match Management Routes
   /matches/like:
     post:
       tags: [Matches]
@@ -389,8 +427,8 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/LikeResponse"
-                  - $ref: "#/components/schemas/MatchResponse"
+                  - $ref: "#/components/schemas/Like"
+                  - $ref: "#/components/schemas/Match"
         "500":
           description: Server error
 
@@ -428,7 +466,6 @@ paths:
         "500":
           description: Server error
 
-  # Messaging Routes
   /messages/send:
     post:
       tags: [Messages]
@@ -475,6 +512,7 @@ paths:
                   $ref: "#/components/schemas/Message"
         "500":
           description: Server error
+
 components:
   schemas:
     User:
@@ -494,7 +532,9 @@ components:
         interests:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/Interest"
+        isAdmin:
+          type: boolean
         location:
           type: object
           properties:
@@ -509,17 +549,24 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Image"
-        isAdmin:
-          type: boolean
+          createdAt:
+            type: string
+            format: date-time
+        interest:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interest"
+
+    Like:
+      type: object
+      properties:
+        fromUserId:
+          $ref: "#/components/schemas/User"
+        toUserId:
+          $ref: "#/components/schemas/User"
         createdAt:
           type: string
           format: date-time
-
-    Interest:
-      type: object
-      properties:
-        name:
-          type: string
 
     Match:
       type: object
@@ -527,7 +574,7 @@ components:
         users:
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/User"
         matchedAt:
           type: string
           format: date-time
@@ -538,11 +585,11 @@ components:
       type: object
       properties:
         match:
-          type: string
+          $ref: "#/components/schemas/Match"
         sender:
-          type: string
+          $ref: "#/components/schemas/User"
         receiver:
-          type: string
+          $ref: "#/components/schemas/User"
         content:
           type: string
         createdAt:
@@ -559,6 +606,15 @@ components:
         createdAt:
           type: string
           format: date-time
+    Interest:
+      type: object
+      properties:
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    
 
   parameters:
     UserId:
@@ -569,7 +625,7 @@ components:
         type: string
 
     InterestId:
-      name: interestId
+      name: id
       in: path
       required: true
       schema:
