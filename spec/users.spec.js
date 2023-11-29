@@ -4,6 +4,29 @@ import mongoose from "mongoose"
 import { cleanUpDatabase, generateValidJwt } from "./utils.js"
 import User from "../models/userModel.js"
 
+describe('GET /users', function() {
+    afterEach(cleanUpDatabase);
+    it('should return all users', async function() {
+        const user = await User.create({
+          email: 'test0.test@heig-vd.ch',
+          password: 'Poisson123'
+        });
+
+        User.create({
+          email: 'test00.test@heig-vd.ch',
+          password: 'Poisson123'
+        });
+
+        const token = await generateValidJwt(user);
+        const res = await supertest(app)
+        .get('/users')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /json/);
+    });
+});
+
+
 
 describe('POST /users/register', function() {
     it('should create a user', async function() {
@@ -34,28 +57,11 @@ describe('POST /users/login', function() {
   }
 )});
 
-// //test la route /users/:userId avec un token valide
-// describe('GET /users/:userId', function() {
-
-//   //afterEach(cleanUpDatabase);
-
-//   it('should get a user', async function() {
-//       const user = await User.create({
-//         email: 'test@heig-vd.ch',
-//         password: 'Poisson123'
-//       });
-//       const token = generateValidJwt(user);
-//       const res = await supertest(app)
-//       .get('/users/'+user._id)
-//     })
-//   });
-
-
-  describe('PATCH /users/:userId', function() {
-  
+describe('PATCH /users/:userId', function() {
+    afterEach(cleanUpDatabase);
     it('should update a user', async function() {
         const user = await User.create({
-          email: 'jesus.christ2@heig-vd.ch',
+          email: 'test.test@heig-vd.ch',
           password: 'Poisson123'
         });
         const token = await generateValidJwt(user);
@@ -63,15 +69,33 @@ describe('POST /users/login', function() {
         .patch('/users/'+user._id)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          email: 'mohammed.ali@heig-vd.ch'
+          email: 'test1.test@heig-vd.ch'
         })
         .expect(200)
         .expect('Content-Type', /json/);
     }
-  )}
-  );
+)});
 
-        
+describe('DELETE /users/:userId', function() {
+    afterEach(cleanUpDatabase);
+    it('should delete a user', async function() {
+        const user = await User.create({
+          email: 'test2.test@heig-vd.ch',
+          password: 'Poisson123'
+        });
+
+        const token = await generateValidJwt(user);
+        const res = await supertest(app)
+        .delete('/users/'+user._id)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /json/);
+    }
+)});
+
+
+
+  
 
 
 
