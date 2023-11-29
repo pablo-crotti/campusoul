@@ -137,6 +137,32 @@ userSchema.statics.findByAgeRange = async function (minAge, maxAge) {
   });
 };
 
+userSchema.statics.findByDistance = async function (currentLocation, maxDistance) {
+  return this.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: currentLocation,
+        },
+        distanceField: "distance",
+        maxDistance: maxDistance * 1000, // Convertir la distance en mètres
+        spherical: true,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        email: 1,
+        name: 1,
+        birthdate: 1,
+        distance: 1,
+      },
+    },
+  ]);
+};
+
+
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);
 

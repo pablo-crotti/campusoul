@@ -90,22 +90,33 @@ const userController = {
       const page = parseInt(req.query.page) || 1;
       const limit = 5;
       const skip = (page - 1) * limit;
-  
+
+      const loggedInUserId = req.user._id;
+      const currentLocation = req.user.location.coordinates;
+
       let users;
-  
-      // Vérifier la présence des paramètres d'âge
+
+      // Filtrer par âge si spécifié
       if (req.query.minAge && req.query.maxAge) {
-        // Si les paramètres d'âge sont présents, filtrer par plage d'âge
         const minAge = parseInt(req.query.minAge);
         const maxAge = parseInt(req.query.maxAge);
+
         users = await User.findByAgeRange(minAge, maxAge);
       } else {
-        // Sinon, récupérer tous les utilisateurs
-        users = await User.find().skip(skip).limit(limit);
+        // Si les filtres d'âge ne sont pas spécifiés, récupérer tous les utilisateurs
+        users = await User.find({ _id: { $ne: loggedInUserId } }).skip(skip).limit(limit);
       }
-  
-      const total = await User.countDocuments();
-  
+
+      // Filtrer par distance maximale si spécifié
+      if (currentLocation && req.query.maxDistance) {
+        const maxDistance = parseInt(req.query.maxDistance);
+        users = await User.findByDistance(currentLocation, maxDistance);
+      }
+      users = users.filter(user => user._id !== loggedInUserId);
+      const total = users.length;
+
+      if (!users.length) return res.status(404).json({ message: 'No users found' });
+
       res.status(200).json({
         total,
         page,
@@ -125,7 +136,6 @@ const userController = {
       res.status(500).json({ message: error.message });
     }
   }
-
 };
 
 export default userController;
