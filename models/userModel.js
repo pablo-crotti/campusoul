@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,  
+    required: true,
   },
   token: {
     type: String
@@ -32,10 +32,10 @@ const userSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: [ 'Point' ]
+      enum: ['Point']
     },
     coordinates: {
-      type: [ Number ],
+      type: [Number],
       validate: {
         validator: validateGeoJsonCoordinates,
         message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array'
@@ -64,6 +64,13 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  delete user.token;
+  return user;
+};
+
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(10);
@@ -76,7 +83,7 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-userSchema.methods.generateAuthToken = async function() {
+userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
   user.token = token;
@@ -116,6 +123,19 @@ function isLatitude(value) {
 function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
+
+userSchema.statics.findByAgeRange = async function (minAge, maxAge) {
+  const currentDate = new Date();
+  const minBirthdate = new Date(currentDate.getFullYear() - maxAge - 1, currentDate.getMonth(), currentDate.getDate());
+  const maxBirthdate = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
+
+  return this.find({
+    birthdate: {
+      $gte: minBirthdate,
+      $lte: maxBirthdate,
+    },
+  });
+};
 
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);

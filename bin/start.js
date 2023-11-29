@@ -7,7 +7,7 @@
 import app from "../app.js";
 import createDebugger from "debug";
 import http from "http";
-import { createWebSocketServer } from '../ws.js';
+import { createWebSocketServer } from '../config/ws.js';
 
 const debug = createDebugger('dev:server')
 /**
