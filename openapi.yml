@@ -12,6 +12,8 @@ tags:
     description: User management
   - name: Interests
     description: Interest management
+  - name: Interest Admin
+    description: Interest management (Admin)
   - name: Images
     description: Image management
   - name: Matches
@@ -20,7 +22,6 @@ tags:
     description: Messaging
 
 paths:
-  # User Registration
   /users/register:
     post:
       tags: [Authentication]
@@ -46,7 +47,6 @@ paths:
         "400":
           description: Email already exists
 
-  # User Login
   /users/login:
     post:
       tags: [Authentication]
@@ -105,8 +105,6 @@ paths:
         "404":
           description: Utilisateur non trouvé
 
-
-  # Get User Profile
   /users/{userId}:
     get:
       tags: [Users]
@@ -143,7 +141,6 @@ paths:
         "404":
           description: User not found
 
-    # Delete User Profile
     delete:
       tags: [Users]
       summary: Delete user profile
@@ -157,7 +154,6 @@ paths:
         "404":
           description: User not found
 
-  # Add Interest to User
   /users/interests:
     post:
       tags: [Users]
@@ -181,7 +177,6 @@ paths:
         "500":
           description: Server error
 
-  # Get User Interests
   /users/{userId}/interests:
     get:
       tags: [Users]
@@ -196,7 +191,6 @@ paths:
         "404":
           description: User not found
 
-  # Remove Interest from User
   /users/{userId}/interests/{interestId}:
     delete:
       tags: [Users]
@@ -216,7 +210,6 @@ paths:
         "404":
           description: User not found
 
-  # Set User Location
   /users/location/{userId}:
     post:
       tags: [Users]
@@ -245,10 +238,9 @@ paths:
         "404":
           description: User not found
 
-  # Interest Management Routes
   /interests:
     post:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Create a new interest
       security:
         - BearerAuth: []
@@ -312,7 +304,7 @@ paths:
           description: Server error
 
     patch:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Update an interest
       security:
         - BearerAuth: []
@@ -336,7 +328,7 @@ paths:
           description: Server error
 
     delete:
-      tags: [Interests]
+      tags: [Interest Admin]
       summary: Delete an interest
       security:
         - BearerAuth: []
@@ -350,7 +342,6 @@ paths:
         "500":
           description: Server error
 
-  # Image Management Routes
   /images:
     post:
       tags: [Images]
@@ -414,7 +405,6 @@ paths:
         "500":
           description: Server error or error deleting from S3
 
-  # Match Management Routes
   /matches/like:
     post:
       tags: [Matches]
@@ -476,7 +466,6 @@ paths:
         "500":
           description: Server error
 
-  # Messaging Routes
   /messages/send:
     post:
       tags: [Messages]
@@ -523,6 +512,7 @@ paths:
                   $ref: "#/components/schemas/Message"
         "500":
           description: Server error
+
 components:
   schemas:
     User:
