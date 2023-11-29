@@ -12,13 +12,10 @@ describe('GET /users', function() {
           password: 'Poisson123'
         });
 
-        User.create({
-          email: 'test00.test@heig-vd.ch',
-          password: 'Poisson123'
-        });
-
         const token = await generateValidJwt(user);
+        console.log(token);
         const res = await supertest(app)
+  
         .get('/users')
         .set('Authorization', `Bearer ${token}`)
         .expect(200)

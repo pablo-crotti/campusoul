@@ -6,11 +6,10 @@ import { promisify } from "util";
 const signJwt = promisify(jwt.sign);
 
 // ...
-export function generateValidJwt(user) {
-    // Generate a valid JWT which expires in 7 days.
+export async function generateValidJwt(user) {
     const exp = (new Date().getTime() + 7 * 24 * 3600 * 1000) / 1000;
     const claims = { sub: user._id.toString(), exp: exp };
-    return signJwt(claims, process.env.JWT_SECRET);
+    return await signJwt(claims, process.env.JWT_SECRET);
   }
 
 export const cleanUpDatabase = async function() {
