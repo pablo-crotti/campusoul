@@ -5,8 +5,10 @@ const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findOne({ _id: decoded._id, token: token });
+        console.debug('decoded token', decoded);
+        const user = await User.findOne({ _id: decoded.sub });
 
+        console.debug('authenticated user', user);
         if (!user) {
             throw new Error();
         }
@@ -36,7 +38,7 @@ const authAdmin = async (req, res, next) => {
         req.token = token;
         req.user = user;
 
-
+        
         next();
     } catch (error) {
         res.status(401).send({ error: 'Please authenticate.' });
@@ -46,11 +48,12 @@ const authAdmin = async (req, res, next) => {
 const userMatch = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
+     
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userIdFromToken = decoded._id;
+    
+        const userIdFromToken = decoded.sub;
         const userIdFromParam = req.params.userId;
 
-        console.log(userIdFromToken);
 
         if (userIdFromToken !== userIdFromParam) {
             return res.status(403).send({ error: 'Access denied' });
