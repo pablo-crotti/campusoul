@@ -36,8 +36,10 @@ const interestController = {
 
   async getInterest(req, res) {
     try {
-      const { id } = req.params;
-      const interest = await Interest.findById(id);
+      // console.log(req.params)
+      // const { id } = req.params;
+      // console.log(id)
+      const interest = await Interest.findById(req.params.id);
       if (!interest) {
         return res.status(404).json({ message: 'Interest not found' });
       }
