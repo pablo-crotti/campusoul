@@ -83,10 +83,6 @@ userSchema.methods.generateAuthToken = async function() {
   await user.save();
   return token;
 };
-// Méthode pour vérifier le mot de passe lors de la connexion
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
 
 userSchema.methods.addInterest = async function (interestId) {
   if (this.interests.includes(interestId)) {
