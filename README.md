@@ -16,7 +16,7 @@ The Campusoul API offers several key features, including:
 - **Matching System**: Users can "like" other profiles and view their list of matches.
 - **Messaging**: Sending and receiving messages between matched users.
 
-## How to Use
+## How to use
 To use the Campusoul API, follow these steps:
 
 1. **Installation**:
@@ -57,7 +57,7 @@ To run this project, you need to set up the environment variables. Follow these 
 
 **Remember not to commit the `.env` file to your version control system. It contains sensitive information specific to your environment.**
 
-## API Documentation
+## API documentation
 Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](http://localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints.
 
 ## Tests
