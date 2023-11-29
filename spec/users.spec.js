@@ -13,7 +13,6 @@ describe('GET /users', function() {
         });
 
         const token = await generateValidJwt(user);
-        console.log(token);
         const res = await supertest(app)
   
         .get('/users')
