@@ -71,21 +71,40 @@ paths:
                 $ref: "#/components/schemas/User"
         "401":
           description: Invalid email or password
-  /users: 
+
+  /users:
     get:
       tags: [Users]
       summary: Get all users
       security:
         - BearerAuth: []
+      parameters:  
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Numéro de la page pour la pagination
+        - in: query
+          name: minAge
+          schema:
+            type: integer
+          description: Âge minimum des utilisateurs à récupérer
+        - in: query
+          name: maxAge
+          schema:
+            type: integer
+          description: Âge maximum des utilisateurs à récupérer
       responses:
         "200":
-          description: User profile data
+          description: Données des profils utilisateurs
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "404":
-          description: User not found
+          description: Utilisateur non trouvé
+
 
   # Get User Profile
   /users/{userId}:
