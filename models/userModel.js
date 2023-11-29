@@ -128,6 +128,19 @@ function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
 
+userSchema.statics.findByAgeRange = async function (minAge, maxAge) {
+  const currentDate = new Date();
+  const minBirthdate = new Date(currentDate.getFullYear() - maxAge - 1, currentDate.getMonth(), currentDate.getDate());
+  const maxBirthdate = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
+
+  return this.find({
+    birthdate: {
+      $gte: minBirthdate,
+      $lte: maxBirthdate,
+    },
+  });
+};
+
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);
 

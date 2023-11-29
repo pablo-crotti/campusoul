@@ -5,10 +5,8 @@ const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.debug('decoded token', decoded);
-        const user = await User.findOne({ _id: decoded.sub });
+        const user = await User.findOne({ _id: decoded._id, token: token });
 
-        console.debug('authenticated user', user);
         if (!user) {
             throw new Error();
         }
@@ -51,7 +49,7 @@ const userMatch = async (req, res, next) => {
      
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-        const userIdFromToken = decoded.sub;
+        const userIdFromToken = decoded._id;
         const userIdFromParam = req.params.userId;
 
 

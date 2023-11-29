@@ -85,7 +85,7 @@ const userController = {
       res.status(500).json({ message: error.message });
     }
   },
-  async getAllUsers(req, res) {
+  /* async getAllUsers(req, res) {
     try {
       const page = parseInt(req.query.page) || 1;
       const limit = 5;
@@ -99,6 +99,37 @@ const userController = {
         page,
         totalPages: Math.ceil(total / limit),
         users
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }, */
+  async getAllUsers(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = 5;
+      const skip = (page - 1) * limit;
+  
+      let users;
+  
+      // Vérifier la présence des paramètres d'âge
+      if (req.query.minAge && req.query.maxAge) {
+        // Si les paramètres d'âge sont présents, filtrer par plage d'âge
+        const minAge = parseInt(req.query.minAge);
+        const maxAge = parseInt(req.query.maxAge);
+        users = await User.findByAgeRange(minAge, maxAge);
+      } else {
+        // Sinon, récupérer tous les utilisateurs
+        users = await User.find().skip(skip).limit(limit);
+      }
+  
+      const total = await User.countDocuments();
+  
+      res.status(200).json({
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+        users,
       });
     } catch (error) {
       res.status(500).json({ message: error.message });
