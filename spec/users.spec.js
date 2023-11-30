@@ -16,25 +16,12 @@ describe('POST /users/register', function() {
         }) 
         .expect(201)
         .expect('Content-Type', /json/);
+        
+        expect(res.body).toBeObject();
+        expect(res.body).toContainAllKeys(['user', 'token'])
     });
 });
 
-describe('GET /users', function() {
-  it('should return all users', async function() {
-      const user = await User.create({
-        email: 'test0.test@heig-vd.ch',
-        password: 'Poisson123'
-      });
-
-      const token = await generateValidJwt(user);
-      const res = await supertest(app)
-
-      .get('/users')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(200)
-      .expect('Content-Type', /json/);
-  });
-});
 
 
 describe('POST /users/login', function() {
@@ -47,12 +34,44 @@ describe('POST /users/login', function() {
       })
       .expect(200)
       .expect('Content-Type', /json/);
+
+      expect(res.body).toBeObject();
+      expect(res.body).toContainAllKeys(['user', 'token'])
   }
 )});
 
+describe('GET /users', function() {
+  afterEach(cleanUpDatabase);
+  it('should return all users', async function() {
+      const user = await User.create({
+        email: 'test0.test@heig-vd.ch',
+        password: 'Poisson123'
+      });
+
+      await User.create({
+        email: 'test00.test@heig-vd.ch',
+        password: 'Poisson123'
+      });
+
+      const token = await generateValidJwt(user);
+      const res = await supertest(app)
+
+      .get('/users')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+      expect(res.body).toBeObject();
+      expect(res.body.users).toHaveLength(2);
+      expect(res.body).toContainAllKeys(["total", "page", "totalPages", "users"])
+  });
+});
+
+
 describe('PATCH /users/:userId', function() {
-    it('should update a user', async function() {
-        const user = await User.create({
+    afterEach(cleanUpDatabase);
+  it('should update a user', async function() {
+    const user = await User.create({
           email: 'test.test@heig-vd.ch',
           password: 'Poisson123'
         });
@@ -65,11 +84,14 @@ describe('PATCH /users/:userId', function() {
         })
         .expect(200)
         .expect('Content-Type', /json/);
+
+        expect(res.body).toBeObject();
+        expect(res.body).toContainAllKeys(['user'])
     }
 )});
 
 describe('DELETE /users/:userId', function() {
-    afterEach(cleanUpDatabase);
+    
     it('should delete a user', async function() {
         const user = await User.create({
           email: 'test2.test@heig-vd.ch',
@@ -82,7 +104,13 @@ describe('DELETE /users/:userId', function() {
         .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/);
-    }
+    
+        expect(res.body).toBeObject()
+        expect(res.body).toContainAllKeys(['message'])
+        expect(res.body.message).toBe("User deleted")
+      }
+
+    
 )});
 
 
