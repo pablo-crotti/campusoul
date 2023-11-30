@@ -12,9 +12,7 @@ router.post('/send', auth, async (req, res) => {
         if(!message) {
             return res.status(500).json({ message: 'Failed to send message' });
         }
-        const targetUserIds = [req.user._id, message.receiver];
-
-        broadcastMessage({newMessage: message}, targetUserIds);
+        broadcastMessage({newChatMessage: message});
         res.status(201).json(message);
     } catch (error) {
         res.status(500).json({ message: error.message });
