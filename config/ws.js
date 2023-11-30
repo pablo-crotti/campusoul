@@ -1,5 +1,5 @@
 import createDebugger from 'debug';
-import { WebSocketServer, WebSocket } from 'ws';
+import { WebSocketServer } from 'ws';
 
 const debug = createDebugger('express-api:messaging');
 
@@ -17,6 +17,7 @@ export function createWebSocketServer(httpServer) {
 
         // Keep track of clients.
         clients.push(ws);
+
         // Listen for messages sent by clients.
         ws.on('message', (message) => {
             // Make sure the message is valid JSON.
@@ -24,7 +25,7 @@ export function createWebSocketServer(httpServer) {
             try {
                 parsedMessage = JSON.parse(message);
             } catch (err) {
-                // Send an error message to the client with "ws" method.
+                // Send an error message to the client with "ws" if you want...
                 return debug('Invalid JSON message received from client');
             }
 
@@ -40,20 +41,19 @@ export function createWebSocketServer(httpServer) {
     });
 }
 
-export function broadcastMessage(message, targetUserIds) {
+export function broadcastMessage(message) {
     debug(
-        `Broadcasting message to specific clients: ${JSON.stringify(message)}`
+        `Broadcasting message to all connected clients: ${JSON.stringify(message)}`
     );
     clients.forEach((client) => {
-        if (
-            client.readyState === WebSocket.OPEN &&
-            (targetUserIds.length === 0 || targetUserIds.includes(client.userId))
-        ) {
-            client.send(JSON.stringify(message));
-        }
+        client.send(JSON.stringify(message));
     });
+    // You can easily iterate over the "clients" array to send a message to all
+    // connected clients.
 }
 
 function onMessageReceived(ws, message) {
     debug(`Received WebSocket message: ${JSON.stringify(message)}`);
+    // Do something with message...
+    ws.send(JSON.stringify(message));
 }
