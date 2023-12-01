@@ -124,44 +124,37 @@ function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
 
-userSchema.statics.findByAgeRange = async function (minAge, maxAge) {
+userSchema.statics.findByCombinedFilters = async function (minAge, maxAge, currentLocation, maxDistance) {
   const currentDate = new Date();
-  const minBirthdate = new Date(currentDate.getFullYear() - maxAge - 1, currentDate.getMonth(), currentDate.getDate());
-  const maxBirthdate = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
 
-  return this.find({
-    birthdate: {
-      $gte: minBirthdate,
-      $lte: maxBirthdate,
-    },
-  });
-};
+  // Définir les filtres de base
+  const baseFilters = {};
 
-userSchema.statics.findByDistance = async function (currentLocation, maxDistance) {
-  return this.aggregate([
-    {
-      $geoNear: {
-        near: {
+  // Filtrer par âge si spécifié
+  if (minAge && maxAge) {
+    const minBirthdate = new Date(currentDate.getFullYear() - maxAge - 1, currentDate.getMonth(), currentDate.getDate());
+    const maxBirthdate = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
+    baseFilters.birthdate = { $gte: minBirthdate, $lte: maxBirthdate };
+  }
+
+  // Filtrer par distance maximale si spécifié
+  if (currentLocation && maxDistance) {
+    baseFilters.location = {
+      $near: {
+        $geometry: {
           type: "Point",
           coordinates: currentLocation,
         },
-        distanceField: "distance",
-        maxDistance: maxDistance * 1000, // Convertir la distance en mètres
-        spherical: true,
+        $maxDistance: maxDistance * 1000,
       },
-    },
-    {
-      $project: {
-        _id: 1,
-        email: 1,
-        name: 1,
-        birthdate: 1,
-        distance: 1,
-      },
-    },
-  ]);
-};
+    };
+  }
 
+  // Construire la requête finale
+  const result = await this.find(baseFilters).select('name birthdate location bio interests images');
+
+  return result;
+};
 
 // Créer le modèle en utilisant le schéma
 const User = mongoose.model('User', userSchema);
