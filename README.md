@@ -65,8 +65,8 @@ Production documentation URL : [campusoul-hrim.onrender.com/api-docs/](https://c
 ## 🧪 Tests
 Unit and integration tests are available in the `spec/` directory. You can run them with `npm run test` to ensure the quality and reliability of the API.
 
-## Contributing
+## 🤝 Contributing
 Contributions to the project are welcome. If you wish to contribute, please fork the repository, create a branch for your changes, and submit a pull request.
 
-## License
+## 📄 License
 This project is licensed under the MIT License.
