@@ -58,10 +58,11 @@ To run this project, you need to set up the environment variables. Follow these 
 **Remember not to commit the `.env` file to your version control system. It contains sensitive information specific to your environment.**
 
 ## API documentation
-Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](http://localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints.
+Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](http://localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints. 
 
+Production documentation URL : [campusoul-hrim.onrender.com/api-docs/](https://campusoul-hrim.onrender.com/api-docs/).
 ## Tests
-Unit and integration tests are available in the `spec/` directory. You can run them with `npm test` to ensure the quality and reliability of the API.
+Unit and integration tests are available in the `spec/` directory. You can run them with `npm run test` to ensure the quality and reliability of the API.
 
 ## Contributing
 Contributions to the project are welcome. If you wish to contribute, please fork the repository, create a branch for your changes, and submit a pull request.
