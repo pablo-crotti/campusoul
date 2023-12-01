@@ -1,7 +1,7 @@
 # 🎓 Campusoul API
 
 ## ℹ️ About
-Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus.
+Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus. The API includes user management, interest management, image handling, matches, and messaging.
 
 ## 👥 Members
 - Bourgeois Kevin
@@ -63,7 +63,7 @@ Complete API documentation is available in the `openapi.yml` file. This file des
 Production documentation URL : [campusoul-hrim.onrender.com/api-docs/](https://campusoul-hrim.onrender.com/api-docs/).
 
 ## 🧪 Tests
-Unit and integration tests are available in the `spec/` directory.
+Unit and integration tests are available in the `spec/` directory. You can run them with `npm run test` to ensure the quality and reliability of the API.
 
 ## Contributing
 Contributions to the project are welcome. If you wish to contribute, please fork the repository, create a branch for your changes, and submit a pull request.
