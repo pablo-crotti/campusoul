@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Campusoul API
-  description: API for a Campusoul application including user management, interest management, image handling, matches, and messaging.
+  description: Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus. The API includes user management, interest management, image handling, matches, and messaging.
   version: "1.0.0"
 servers:
   - url: https://campusoul-hrim.onrender.com/
