@@ -16,9 +16,8 @@ import db from './config/db.js';
 
 const app = express();
 
-// Parse the OpenAPI document.
 const openApiDocument = yaml.load(fs.readFileSync('./openapi.yml'));
-// Serve the Swagger UI documentation.
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.use(logger("dev"));
