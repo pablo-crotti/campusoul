@@ -1,22 +1,22 @@
-# Campusoul API
+# 🎓 Campusoul API
 
-## About
-Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus. The API includes user management, interest management, image handling, matches, and messaging.
+## ℹ️ About
+Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus.
 
-## Members
+## 👥 Members
 - Bourgeois Kevin
 - Crotti Pablo
 - Masungi Glory
 - Meuwly Nicolas
 
-## Features
+## 🚀 Features
 The Campusoul API offers several key features, including:
 - **User Management**: Registration, login, profile updates, and account deletion.
 - **Interests Management**: Allows users to add, view, and delete their interests.
 - **Matching System**: Users can "like" other profiles and view their list of matches.
 - **Messaging**: Sending and receiving messages between matched users.
 
-## How to use
+## 📝 How to use
 To use the Campusoul API, follow these steps:
 
 1. **Installation**:
@@ -33,7 +33,7 @@ To use the Campusoul API, follow these steps:
    - Use an API client like Postman or cURL requests to interact with the API.
    - The available routes are defined in files under the `routes/` directory.
 
-## Environment Setup
+## ⚙️ Environment Setup
 
 To run this project, you need to set up the environment variables. Follow these steps to configure them:
 
@@ -57,12 +57,13 @@ To run this project, you need to set up the environment variables. Follow these 
 
 **Remember not to commit the `.env` file to your version control system. It contains sensitive information specific to your environment.**
 
-## API documentation
+## 📚 API documentation
 Complete API documentation is available in the `openapi.yml` file. This file describes all the routes, methods, and expected responses of the API. Additionally, once the services are launched, the documentation can also be accessed via this URL : [localhost:3000/api-docs](http://localhost:3000/api-docs), providing a convenient way to view and interact with the API's endpoints. 
 
 Production documentation URL : [campusoul-hrim.onrender.com/api-docs/](https://campusoul-hrim.onrender.com/api-docs/).
-## Tests
-Unit and integration tests are available in the `spec/` directory. You can run them with `npm run test` to ensure the quality and reliability of the API.
+
+## 🧪 Tests
+Unit and integration tests are available in the `spec/` directory.
 
 ## Contributing
 Contributions to the project are welcome. If you wish to contribute, please fork the repository, create a branch for your changes, and submit a pull request.
