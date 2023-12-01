@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node ./bin/start",
-    "test": "cross-env DATABASE_URL=mongodb://127.0.0.1/unit-test node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "cross-env MONGODB_URI=mongodb://127.0.0.1/unit-test node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "aws-sdk": "^2.1495.0",
