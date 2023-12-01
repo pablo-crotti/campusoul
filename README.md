@@ -1,7 +1,7 @@
 # Campusoul API
 
 ## About
-Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus.
+Campusoul is an API developed as part of the ArchiOWeb course at HEIG-VD, specifically for the Media Engineering program. This API aims to provide a social networking platform for students, facilitating enriching social interactions within the campus. The API includes user management, interest management, image handling, matches, and messaging.
 
 ## Members
 - Bourgeois Kevin
