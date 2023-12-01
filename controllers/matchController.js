@@ -30,8 +30,7 @@ const MatchController = {
             { fromUser: toUserId, toUser: fromUserId },
           ],
         });
-
-        res.status(201).json({ message: 'Match créé avec succès!', match });
+        return match;
       } else {
         // Si le like mutuel n'existe pas, créer un like
         const like = new Like({
@@ -40,7 +39,7 @@ const MatchController = {
         });
 
         await like.save();
-        res.status(201).json({ message: 'Like créé avec succès!', like });
+        return like;
       }
     } catch (error) {
       res.status(500).json({ message: 'Erreur serveur', error: error.message });
