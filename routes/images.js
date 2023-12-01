@@ -22,6 +22,18 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
+/**
+* Route handler for uploading a file. The file is uploaded to AWS S3 and its URL is stored in the database.
+* The file is associated with the user who uploaded it. Requires authentication.
+* 
+* @param {Object} req - The HTTP request object. The file to be uploaded is expected in 'req.file'.
+* @param {Object} res - The HTTP response object used for sending back the status of the upload and the updated user data.
+* 
+* The route uses 'auth' middleware for authentication and 'upload.single('file')' middleware for handling file uploads.
+* 
+* On successful upload, the file's URL is saved in the database and associated with the user. The updated user data is then returned.
+* If no file is provided, a 400 bad request response is sent. Errors during file upload or database operations result in appropriate error responses.
+*/
 router.post('', auth, upload.single('file'), async (req, res) => {
     try {
 
@@ -67,6 +79,18 @@ router.post('', auth, upload.single('file'), async (req, res) => {
     }
 });
 
+/**
+* Route handler for deleting an image. The image is deleted from AWS S3 and its reference is removed from the database.
+* The image is identified by its ID provided in the route parameters. Requires authentication.
+* 
+* @param {Object} req - The HTTP request object. The image ID to be deleted is expected in 'req.params.imageId'.
+* @param {Object} res - The HTTP response object used for sending back the status of the deletion.
+* 
+* The route uses 'auth' middleware for authentication.
+* 
+* On successful deletion, the image is removed from AWS S3 and its reference is deleted from the database.
+* If the image is not found, a 404 not found response is sent. Errors during deletion from S3 or database operations result in appropriate error responses.
+*/
 router.delete('/:imageId', auth, async (req, res) => {
     try {
         const imageId = req.params.imageId;
@@ -101,6 +125,15 @@ router.delete('/:imageId', auth, async (req, res) => {
     }
 });
 
+/**
+* Route handler for retrieving a specific image by its ID. The image ID is provided in the route parameters.
+* 
+* @param {Object} req - The HTTP request object. The image ID to be retrieved is expected in 'req.params.imageId'.
+* @param {Object} res - The HTTP response object used for sending back the requested image or an error message.
+* 
+* On successful retrieval, the image data is returned. If the image is not found, a 404 not found response is sent.
+* Errors during the retrieval process result in a 500 internal server error response.
+*/
 router.get('/:imageId', async (req, res) => {
     try {
         const imageId = req.params.imageId;

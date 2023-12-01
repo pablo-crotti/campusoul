@@ -5,35 +5,34 @@ const debug = createDebugger('express-api:messaging');
 
 const clients = [];
 
+/**
+* Initializes a WebSocket server on an existing HTTP server.
+* Handles new connections, messages, and disconnections of WebSocket clients.
+* 
+* @param {Object} httpServer - The HTTP server for WebSocket attachment.
+*/
 export function createWebSocketServer(httpServer) {
     debug('Creating WebSocket server');
     const wss = new WebSocketServer({
         server: httpServer,
     });
 
-    // Handle new client connections.
     wss.on('connection', function (ws) {
         debug('New WebSocket client connected');
 
-        // Keep track of clients.
         clients.push(ws);
 
-        // Listen for messages sent by clients.
         ws.on('message', (message) => {
-            // Make sure the message is valid JSON.
             let parsedMessage;
             try {
                 parsedMessage = JSON.parse(message);
             } catch (err) {
-                // Send an error message to the client with "ws" if you want...
                 return debug('Invalid JSON message received from client');
             }
 
-            // Handle the message.
             onMessageReceived(ws, parsedMessage);
         });
 
-        // Clean up disconnected clients.
         ws.on('close', () => {
             clients.splice(clients.indexOf(ws), 1);
             debug('WebSocket client disconnected');
@@ -41,6 +40,11 @@ export function createWebSocketServer(httpServer) {
     });
 }
 
+/**
+* Broadcasts a message to all connected WebSocket clients.
+* 
+* @param {Object|string} message - The message to be broadcasted.
+*/
 export function broadcastMessage(message) {
     debug(
         `Broadcasting message to all connected clients: ${JSON.stringify(message)}`
@@ -48,12 +52,15 @@ export function broadcastMessage(message) {
     clients.forEach((client) => {
         client.send(JSON.stringify(message));
     });
-    // You can easily iterate over the "clients" array to send a message to all
-    // connected clients.
 }
 
+/**
+* Handles received messages from a WebSocket client and echoes them back.
+* 
+* @param {Object} ws - The WebSocket connection from which the message was received.
+* @param {Object|string} message - The message received from the client.
+*/
 function onMessageReceived(ws, message) {
     debug(`Received WebSocket message: ${JSON.stringify(message)}`);
-    // Do something with message...
     ws.send(JSON.stringify(message));
 }

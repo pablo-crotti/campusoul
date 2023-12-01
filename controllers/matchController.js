@@ -1,29 +1,32 @@
 import Match from '../models/matchModel.js';
 import Like from '../models/likeModel.js';
-import User from '../models/userModel.js';
 
 const MatchController = {
-  // Liker un utilisateur
+  /**
+  * Handles the 'like' action from one user to another. If both users have liked each other,
+  * a match is created and both likes are removed from the database. If only one user has liked,
+  * the like is saved in the database. In case of errors, responds with an error message.
+  * 
+  * @param {Object} req - The HTTP request object containing the user's ID (fromUser) in the user object and the target user's ID (toUserId) in the body.
+  * @param {Object} res - The HTTP response object for sending back the created like or match, or an error message.
+  */
   async likeUser(req, res) {
     try {
-      const fromUserId = req.user._id; // L'ID de l'utilisateur authentifié
-      const { toUserId } = req.body; // L'ID de l'utilisateur à liker
+      const fromUserId = req.user._id;
+      const { toUserId } = req.body;
 
-      // Vérifier si 'toUser' a déjà aimé 'fromUser'
       const existingLike = await Like.findOne({
         fromUser: toUserId,
         toUser: fromUserId,
       });
 
       if (existingLike) {
-        // Si le like mutuel existe, créer un match
         const match = new Match({
           users: [fromUserId, toUserId],
         });
 
         await match.save();
 
-        // Supprimer les "likes" puisqu'ils sont maintenant un match
         await Like.deleteMany({
           $or: [
             { fromUser: fromUserId, toUser: toUserId },
@@ -32,7 +35,6 @@ const MatchController = {
         });
         return match;
       } else {
-        // Si le like mutuel n'existe pas, créer un like
         const like = new Like({
           fromUser: fromUserId,
           toUser: toUserId,
@@ -46,10 +48,16 @@ const MatchController = {
     }
   },
 
-  // Lister les matchs d'un utilisateur
+  /**
+  * Retrieves a list of active matches for the logged-in user. Each match includes user details,
+  * excluding passwords. In case of errors, responds with an error message.
+  * 
+  * @param {Object} req - The HTTP request object containing the logged-in user's ID in the user object.
+  * @param {Object} res - The HTTP response object for sending back the list of matches or an error message.
+  */
   async listMatches(req, res) {
     try {
-      const userId = req.user._id; // L'ID de l'utilisateur authentifié
+      const userId = req.user._id;
       const matches = await Match.find({
         users: userId,
         isMatchActive: true,
@@ -60,8 +68,15 @@ const MatchController = {
       res.status(500).json({ message: 'Erreur serveur', error: error.message });
     }
   },
-
-  // Dissoudre un match
+  
+  /**
+  * Dissolves an existing match between users. The match is identified by the matchId in the request parameters.
+  * Only a user involved in the match can dissolve it. Sets the match's 'isMatchActive' status to false.
+  * In case of errors or unauthorized access, responds with an appropriate error message.
+  * 
+  * @param {Object} req - The HTTP request object containing the match's ID in the params and the user's ID in the user object.
+  * @param {Object} res - The HTTP response object for sending back the status of the dissolved match or an error message.
+  */
   async unmatchUser(req, res) {
     try {
       const { matchId } = req.params;
@@ -72,7 +87,6 @@ const MatchController = {
         return res.status(404).json({ message: 'Match non trouvé' });
       }
 
-      // Vérifier si l'utilisateur fait partie du match
       if (!match.users.includes(userId)) {
         return res.status(401).json({ message: 'Action non autorisée' });
       }

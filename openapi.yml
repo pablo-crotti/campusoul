@@ -95,6 +95,11 @@ paths:
           schema:
             type: integer
           description: Âge maximum des utilisateurs à récupérer
+        - in: query
+          name: maxDistance
+          schema:
+            type: integer
+          description: Distance maximale des utilisateurs à récupérer
       responses:
         "200":
           description: Données des profils utilisateurs
