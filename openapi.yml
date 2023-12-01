@@ -4,7 +4,10 @@ info:
   description: API for a Campusoul application including user management, interest management, image handling, matches, and messaging.
   version: "1.0.0"
 servers:
+  - url: https://campusoul-hrim.onrender.com/
+    description: Production server
   - url: http://localhost:3000/
+    description: Local server
 tags:
   - name: Authentication
     description: Authentication
