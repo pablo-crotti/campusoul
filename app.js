@@ -17,9 +17,7 @@ import db from './config/db.js';
 
 const app = express();
 
-app.use(cors({
-  credentials: true
-}));
+app.use(cors());
 
 const openApiDocument = yaml.load(fs.readFileSync('./openapi.yml'));
 
