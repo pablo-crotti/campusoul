@@ -105,6 +105,8 @@ const MatchController = {
       const { matchId } = req.params;
       const userId = req.user._id;
 
+      console.log(matchId, userId);
+
       const match = await Match.findById(matchId).populate('users', '-password');
       if (!match) {
         return res.status(404).json({ message: 'Match non trouvé' });
