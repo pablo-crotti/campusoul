@@ -14,13 +14,30 @@ const MatchController = {
     try {
       const fromUserId = req.user._id;
       const { toUserId } = req.body;
+      let existingMatch = false;
 
       const existingLike = await Like.findOne({
         fromUser: toUserId,
         toUser: fromUserId,
       });
 
-      if (existingLike) {
+      const alreadyLiked = await Like.findOne({
+        fromUser: fromUserId,
+        toUser: toUserId,
+      });
+
+      const matchs = await Match.find({
+        users: fromUserId,
+        isMatchActive: true,
+      });
+
+      matchs.forEach(match => {
+        if (match.users.includes(toUserId)) {
+          existingMatch = true;
+        }
+      });
+
+      if (existingLike && !existingMatch) {
         const match = new Match({
           users: [fromUserId, toUserId],
         });
@@ -34,7 +51,7 @@ const MatchController = {
           ],
         });
         return match;
-      } else {
+      } else if (!alreadyLiked){
         const like = new Like({
           fromUser: fromUserId,
           toUser: toUserId,
