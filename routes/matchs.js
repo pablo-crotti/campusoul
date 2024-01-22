@@ -49,4 +49,6 @@ router.get('/list', auth, MatchController.listMatches);
 */
 router.post('/unmatch/:matchId', auth, MatchController.unmatchUser);
 
+router.get('/:matchId', auth, MatchController.getMatch);
+
 export default router;

@@ -99,6 +99,27 @@ const MatchController = {
       res.status(500).json({ message: 'Erreur serveur', error: error.message });
     }
   },
+
+  async getMatch(req, res) {
+    try {
+      const { matchId } = req.params;
+      const userId = req.user._id;
+
+      const match = await Match.findById(matchId).populate('users', '-password');
+      if (!match) {
+        return res.status(404).json({ message: 'Match non trouvé' });
+      }
+
+      if (!match.users.includes(userId)) {
+        return res.status(401).json({ message: 'Action non autorisée' });
+      }
+
+      res.status(200).json(match);
+    }
+    catch (error) {
+      res.status(500).json({ message: 'Erreur serveur', error: error.message });
+    }
+  }
 };
 
 export default MatchController;
