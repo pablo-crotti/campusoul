@@ -112,10 +112,6 @@ const MatchController = {
         return res.status(404).json({ message: 'Match non trouvé' });
       }
 
-      if (!match.users.includes(userId)) {
-        return res.status(401).json({ message: 'Action non autorisée' });
-      }
-
       res.status(200).json(match);
     }
     catch (error) {
