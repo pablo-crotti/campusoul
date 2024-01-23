@@ -19,7 +19,6 @@ const interestController = {
       res.status(500).json({ message: error.message });
     }
   },
-
   /**
   * Deletes an interest entry from the database based on the provided ID.
   * If the interest with the specified ID is found, it is deleted and a success response is returned.
