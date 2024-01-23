@@ -1,4 +1,6 @@
 import User from '../models/userModel.js';
+import Like from '../models/likeModel.js';
+import Match from '../models/matchModel.js';
 
 const userController = {
   /**
@@ -163,6 +165,11 @@ const userController = {
   */
   async getAllUsers(req, res) {
     try {
+      const likes = await Like.find({ fromUser: req.user._id });
+      const likedUserIds = likes.map(like => like.toUser);
+      const matches = await Match.find({ users: req.user._id, isMatchActive: true });
+      const matchedUserIds = matches.map(match => match.users.filter(user => user.toString() !== req.user._id.toString())[0]);
+      const excludedUserIds = [...likedUserIds, ...matchedUserIds];
       const page = parseInt(req.query.page) || 1;
       const limit = 5;
       const skip = (page - 1) * limit;
@@ -180,6 +187,9 @@ const userController = {
       users = await User.findByCombinedFilters(minAge, maxAge, currentLocation, maxDistance);
 
       users = users.filter(user => user._id.toString() !== loggedInUserId.toString());
+      excludedUserIds.forEach(userId => {
+        users = users.filter(user => user._id.toString() !== userId.toString());
+      });
 
       const total = users.length;
 
