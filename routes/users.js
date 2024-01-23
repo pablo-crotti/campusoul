@@ -55,7 +55,7 @@ router.delete('/:userId', auth, userMatch, userController.deleteProfile);
 */
 router.post('/interests', auth, userController.addInterestToUser);
 
-router.delete('/interests', auth, userController.clearInterests);
+router.patch('/interests', auth, userController.clearInterests);
 
 /**
 * Route for removing an interest from a user's profile. Requires user authentication and user match verification.
