@@ -45,24 +45,37 @@ const MessageController = {
   * @param {Object} req - The HTTP request object containing the match ID in the params.
   * @param {Object} res - The HTTP response object for sending back the list of messages or an error message.
   */
-async getMessages(req, res) {
-  try {
-    const { matchId } = req.params;
-    const userId = req.user._id; 
-
-    const messages = await Message.find({ match: matchId }).populate('sender', 'name');
-    await Message.updateMany(
-      { match: matchId, receiver: userId, read: false }, 
-      { $set: { read: true } } 
-    );
-
-    console.log(messages)
-
-    res.status(200).json(messages);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-},
+  async getMessages(req, res) {
+    try {
+      const { matchId } = req.params;
+      const userId = req.user._id; 
+  
+      // Step 1: Fetch the messages for the matchId.
+      const messages = await Message.find({ match: matchId }).populate('sender', 'name');
+      
+      // Step 2: Update the 'read' status for messages where the current user is the receiver.
+      const updateResult = await Message.updateMany(
+        { match: matchId, receiver: userId, read: false }, 
+        { $set: { read: true } }
+      );
+  
+      // Log the result of the update operation for debugging.
+      console.log('Update result:', updateResult);
+  
+      // Step 3: Re-fetch the messages to get the updated 'read' status.
+      const updatedMessages = await Message.find({ match: matchId }).populate('sender', 'name');
+      
+      // Log the updated messages for debugging.
+      console.log(updatedMessages);
+  
+      // Step 4: Send the updated messages as a response.
+      res.status(200).json(updatedMessages);
+    } catch (error) {
+      console.error('Error fetching or updating messages:', error);
+      res.status(500).json({ message: error.message });
+    }
+  },
+  
 
   async getLastMessage(req, res) {
     try {
