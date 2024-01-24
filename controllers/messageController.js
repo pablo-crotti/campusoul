@@ -15,6 +15,7 @@ const MessageController = {
       const { matchId } = req.params;
       const userId = req.user._id;
       const userIdString = userId.toString();
+      const userIdObjectId = mongoose.Types.ObjectId(userIdString);  // Convert string back to ObjectId
 
       console.log('Match ID:', matchId);
       console.log('User ID:', userIdString);
@@ -25,7 +26,7 @@ const MessageController = {
 
       // Update the 'read' status for messages where the current user is the receiver.
       const updateResult = await Message.updateMany(
-        { match: matchId, receiver: userIdString, read: false },
+        { match: matchId, receiver: userIdObjectId, read: false },  // Use ObjectId for receiver
         { $set: { read: true } }
       );
 
