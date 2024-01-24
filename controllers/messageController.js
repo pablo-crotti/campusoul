@@ -15,33 +15,31 @@ const MessageController = {
     try {
       const { matchId } = req.params;
       const userId = req.user._id;
-      const userIdString = userId.toString();
-      const userIdObjectId = new mongoose.Types.ObjectId(userIdString);  // Correctly create a new ObjectId
-  
+      const userIdObjectId = new mongoose.Types.ObjectId(userId.toString());  // Ensure it's an ObjectId
+
       console.log('Match ID:', matchId);
-      console.log('User ID:', userIdString);
-  
-      // Fetch the messages for the matchId.
-      const messages = await Message.find({ match: matchId }).populate('sender', 'name').lean();
+      console.log('User ID:', userId);
+
+      // Fetch the messages for the matchId where the user is the receiver.
+      const messages = await Message.find({ match: matchId, sender: { $ne: userIdObjectId } }).populate('sender', 'name').lean();
       console.log('Messages before update:', messages);
-  
-      // Update the 'read' status for messages where the current user is the receiver.
+
+      // Update the 'read' status for messages where the current user is the receiver (sender is not the current user).
       const updateResult = await Message.updateMany(
-        { match: matchId, receiver: userIdObjectId, read: false },  // Use ObjectId for receiver
+        { match: matchId, sender: { $ne: userIdObjectId }, read: false },  // Update where sender is not the user
         { $set: { read: true } }
       );
-  
+
       // Log the result of the update operation for debugging.
       console.log('Update result:', updateResult);
-  
-      // Send the messages as a response (they won't reflect the update as they were fetched before the update).
+
+      // Send the updated messages as a response.
       res.status(200).json(messages);
     } catch (error) {
       console.error('Error fetching or updating messages:', error);
       res.status(500).json({ message: error.message });
     }
   },
-  
 
   async getLastMessage(req, res) {
     try {
