@@ -52,8 +52,8 @@ async getMessages(req, res) {
 
     const messages = await Message.find({ match: matchId }).populate('sender', 'name');
     await Message.updateMany(
-      { match: matchId, receiver: userId, readed: false }, 
-      { $set: { readed: true } } 
+      { match: matchId, receiver: userId, read: false }, 
+      { $set: { read: true } } 
     );
 
     console.log(messages)
