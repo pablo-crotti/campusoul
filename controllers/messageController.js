@@ -50,15 +50,18 @@ const MessageController = {
       const { matchId } = req.params;
       const userId = req.user._id;
 
+      const userIdString = userId.toString(); 
+
+
       console.log('Match ID:', matchId);
-      console.log('User ID:', userId);
+      console.log('User ID:', userIdString);
 
       // Fetch the messages for the matchId.
       const messages = await Message.find({ match: matchId }).populate('sender', 'name').lean();
 
       // Update the 'read' status for messages where the current user is the receiver.
       const updateResult = await Message.updateMany(
-        { match: matchId, receiver: userId, read: false },
+        { match: matchId, receiver: userIdString, read: false },
         { $set: { read: true } }
       );
 
