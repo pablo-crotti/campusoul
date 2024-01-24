@@ -56,6 +56,8 @@ async getMessages(req, res) {
       { $set: { readed: true } } 
     );
 
+    console.log(messages)
+
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: error.message });
