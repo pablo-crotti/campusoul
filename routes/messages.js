@@ -41,6 +41,6 @@ router.post('/send', auth, async (req, res) => {
 */
 router.get('/:matchId', auth, MessageController.getMessages);
 
-router.get('last/:matchId', auth, MessageController.getLastMessage);
+router.get('/last/:matchId', auth, MessageController.getLastMessage);
 
 export default router;
