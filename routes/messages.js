@@ -43,6 +43,6 @@ router.get('/:matchId', auth, MessageController.getMessages);
 
 router.get('/last/:matchId', auth, MessageController.getLastMessage);
 
-router.post('/read/:matchId', auth, MessageController.readMessages);
+// router.post('/read/:matchId', auth, MessageController.readMessages);
 
 export default router;
