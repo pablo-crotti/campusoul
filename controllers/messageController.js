@@ -41,6 +41,7 @@ const MessageController = {
     }
   },
 
+
   async getLastMessage(req, res) {
     try {
       const { matchId } = req.params;
