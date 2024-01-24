@@ -54,6 +54,17 @@ const MessageController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  },
+
+  async getLastMessage(req, res) {
+    try {
+      const { matchId } = req.params;
+
+      const message = await Message.find({ match: matchId }).sort({ createdAt: -1 }).limit(1);
+      res.status(200).json(message);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
