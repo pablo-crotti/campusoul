@@ -16,24 +16,24 @@ const MessageController = {
       const { matchId } = req.params;
       const userId = req.user._id;
       const userIdString = userId.toString();
-      const userIdObjectId = mongoose.Types.ObjectId(userIdString);  // Convert string back to ObjectId
-
+      const userIdObjectId = new mongoose.Types.ObjectId(userIdString);  // Correctly create a new ObjectId
+  
       console.log('Match ID:', matchId);
       console.log('User ID:', userIdString);
-
+  
       // Fetch the messages for the matchId.
       const messages = await Message.find({ match: matchId }).populate('sender', 'name').lean();
       console.log('Messages before update:', messages);
-
+  
       // Update the 'read' status for messages where the current user is the receiver.
       const updateResult = await Message.updateMany(
         { match: matchId, receiver: userIdObjectId, read: false },  // Use ObjectId for receiver
         { $set: { read: true } }
       );
-
+  
       // Log the result of the update operation for debugging.
       console.log('Update result:', updateResult);
-
+  
       // Send the messages as a response (they won't reflect the update as they were fetched before the update).
       res.status(200).json(messages);
     } catch (error) {
@@ -41,6 +41,7 @@ const MessageController = {
       res.status(500).json({ message: error.message });
     }
   },
+  
 
   async getLastMessage(req, res) {
     try {
