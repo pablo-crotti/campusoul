@@ -45,16 +45,22 @@ const MessageController = {
   * @param {Object} req - The HTTP request object containing the match ID in the params.
   * @param {Object} res - The HTTP response object for sending back the list of messages or an error message.
   */
-  async getMessages(req, res) {
-    try {
-      const { matchId } = req.params;
+async getMessages(req, res) {
+  try {
+    const { matchId } = req.params;
+    const userId = req.user._id; 
 
-      const messages = await Message.find({ match: matchId }).populate('sender', 'name');
-      res.status(200).json(messages);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  },
+    const messages = await Message.find({ match: matchId }).populate('sender', 'name');
+    await Message.updateMany(
+      { match: matchId, receiver: userId, readed: false }, 
+      { $set: { readed: true } } 
+    );
+
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+},
 
   async getLastMessage(req, res) {
     try {
