@@ -1,5 +1,6 @@
 import Message from '../models/messageModel.js';
 import Match from '../models/matchModel.js';
+import mongoose from 'mongoose';
 
 const MessageController = {
   /**
