@@ -65,6 +65,17 @@ const MessageController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  },
+
+  async readMessages(req, res) {
+    try {
+      const { matchId } = req.params;
+
+      const messages = await Message.updateMany({ match: matchId, receiver: req.user._id }, { $set: { readed: true } });
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
