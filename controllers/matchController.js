@@ -98,12 +98,10 @@ const MatchController = {
     try {
       const { matchId } = req.params;
       const userId = req.user._id;
-      console.log(matchId, userId);
       const match = await Match.findById(matchId);
       if (!match) {
         return res.status(404).json({ message: 'Match non trouvé' });
       }
-      console.log(match.users);
       if (!match.users.includes(userId)) {
         return res.status(401).json({ message: 'Action non autorisée' });
       }

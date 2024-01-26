@@ -77,8 +77,17 @@ const MessageController = {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 
+  async getTotalUnreadMessages(req, res) {
+    try {
+      const { matchId } = req.params;
+      const totalUnreadMessages = await Message.countDocuments({ match: matchId, read: false });
+      res.status(200).json(totalUnreadMessages);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 };
 
 
