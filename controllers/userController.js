@@ -194,7 +194,8 @@ const userController = {
       const total = users.length;
 
       if (!users.length) return res.status(404).json({ message: 'No users found' });
-
+      
+      randomize(users);
       res.status(200).json({
         total,
         page,
@@ -224,5 +225,23 @@ const userController = {
     }
   }
 };
+
+/**
+   * Shuffles array in place.
+   * @param {Array} values An array containing the items.
+   * @returns {Array} The shuffled array.
+   */
+function randomize(values) {
+  let index = values.length, randomIndex;
+
+  while (index != 0) {
+    randomIndex = Math.floor(Math.random() * index);
+    index--;
+
+    [values[index], values[randomIndex]] = [values[randomIndex], values[index]];
+  }
+
+  return values;
+}
 
 export default userController;
