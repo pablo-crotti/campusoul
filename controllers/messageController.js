@@ -13,22 +13,13 @@ const MessageController = {
   */
   async sendMessage(req, res) {
     try {
-      const { matchId, content } = req.body;
+      const { matchId, content, receiver } = req.body;
       const senderId = req.user._id;
-      const match = await Match.findById(matchId);
-      let receiverId;
-      if (!match) {
-        return res.status(404).json({ message: 'Match not found' });
-      }
-      if (match.users[0] == senderId) {
-        receiverId = match.users[1]
-      } else {
-        receiverId = match.users[0]
-      }
+      
       const message = new Message({
         match: matchId,
         sender: senderId,
-        receiver: receiverId,
+        receiver: receiver,
         content: content
       });
 
